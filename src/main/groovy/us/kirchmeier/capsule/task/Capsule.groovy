@@ -2,7 +2,6 @@ package us.kirchmeier.capsule.task
 
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.FileCollectionDependency
-import org.gradle.api.artifacts.ModuleDependency
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.util.ConfigureUtil
 import us.kirchmeier.capsule.manifest.CapsuleManifest
@@ -147,7 +146,10 @@ class Capsule extends Jar {
   protected void applyDefaultCapsuleSet() {
     if (!capsuleConfiguration) return
 
-    from(capsuleConfiguration.collect({ project.zipTree(it) }), capsuleFilter)
+    if (!capsuleFilter)
+      from(capsuleConfiguration.collect({ project.zipTree(it) }))
+    else
+      from(capsuleConfiguration.collect({ project.zipTree(it) }), capsuleFilter)
   }
 
   protected void applyDefaultCapletSet() {
